@@ -28,5 +28,5 @@ Focus time completed: 50 minutes
 Great job, Alice! You turned your scrolling into studying.
 
 Contributors:
-Student 1: Marthena Padayao
+Student 1: Marthena Abrielle A. Padayao
 Student 2: Marco Ethan Y. Pacad
