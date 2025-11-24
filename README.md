@@ -24,11 +24,11 @@ How to Run the Program:
 
 3.Enter Unwanted Websites - input the link/s of the websites you want to temporarily block.
 
-3.Start the Focus Timer – the program will block distracting apps and websites while you study.
+4.Start the Focus Timer – the program will block distracting apps and websites while you study.
 
-4.Take Breaks – follow the timer’s scheduled breaks to rest and refresh.
+5.Take Breaks – follow the timer’s scheduled breaks to rest and refresh.
 
-5.Check Progress – after studying, view your tracked study hours and completed tasks.
+6.Check Progress – after studying, view your tracked study hours and completed tasks.
 
 Example Output:
 
