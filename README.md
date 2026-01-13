@@ -9,8 +9,6 @@ Features:
 
 Focus Timer – a built-in timer to manage study and break sessions (Pomodoro style).
 
-Website Blocker – temporarily restricts access to distracting social media websites while studying.
-
 Progress Tracker – monitors study hours and completed tasks.
 
 Motivation Boost – reminders, quotes, or rewards to keep students encouraged.
@@ -22,23 +20,17 @@ How to Run the Program:
 
 2.Set Your Study Plan – input the subject or task you want to focus on and the time you’ll spend.
 
-3.Enter Unwanted Websites - input the link/s of the websites you want to temporarily block.
+3.Start the Focus Timer – the program will block distracting apps and websites while you study.
 
-4.Start the Focus Timer – the program will block distracting apps and websites while you study.
+4.Take Breaks – follow the timer’s scheduled breaks to rest and refresh.
 
-5.Take Breaks – follow the timer’s scheduled breaks to rest and refresh.
-
-6.Check Progress – after studying, view your tracked study hours and completed tasks.
+5.Check Progress – after studying, view your tracked study hours and completed tasks.
 
 Example Output:
 
 Enter student name: Alice
 
 Enter Subject, Task, and Time planned to Study: Biology, Quiz, 1 hour
-
-Enter Unwanted Websites (link): facebook.com
-                                instagram.com
-                                tiktok.com
 
 Start Focus Timer
 
