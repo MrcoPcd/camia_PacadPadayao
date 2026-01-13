@@ -8,7 +8,6 @@ Project Objectives:
 
 Planned Features:
 • Pomodoro Timer
-• Website Blocker (to restrict access to social media websites)
 • Progress Tracker 
 • User-customized Study Plan
 • Motivation Boost pop-ups (reminders, quotes, and rewards)
@@ -17,9 +16,7 @@ Planned Inputs and Outputs:
   INPUTS:
     • Subject that the user will study.
     • Time to be spent studying.
-    • Websites that the user requests to block while studying.
 
   OUTPUTS:
     • Motivation Boost pop-up reminders/quotes/rewards
-    • Distraction Detector pop-up (if the user is trying to use an app )
     • Tracked study hours 
