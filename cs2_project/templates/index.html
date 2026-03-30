@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Study Assistant</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f4f6f8;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            margin: 30px auto;
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        input {
+            padding: 10px;
+            width: 70%;
+        }
+
+        #timer {
+            font-size: 60px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>📚 Study Productivity Tool</h1>
+
+<div class="box">
+    <h2>🍅 Pomodoro Timer</h2>
+    <h3 id="mode">Mode: Focus</h3>
+    <div id="timer">25:00</div>
+
+    <button onclick="startTimer()">Start</button>
+</div>
+
+<div class="box">
+    <h2>✅ To-Do List</h2>
+
+    <form action="/add_task" method="POST">
+        <input type="text" name="task" placeholder="Enter task" required>
+        <button type="submit">Add</button>
+    </form>
+
+    <br>
+    <a href="/tasks"><button>View Tasks</button></a>
+</div>
+
+<div class="box">
+    <h2>📊 Progress Tracker</h2>
+    <a href="/progress"><button>View Progress</button></a>
+</div>
+
+<script>
+function startTimer() {
+    fetch('/start_timer');
+}
+
+function updateTimer() {
+    fetch('/timer')
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("timer").innerText = data.time;
+        document.getElementById("mode").innerText = "Mode: " + data.mode;
+    });
+}
+
+setInterval(updateTimer, 1000);
+</script>
+
+</body>
+</html>
