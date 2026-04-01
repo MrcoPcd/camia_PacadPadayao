@@ -28,15 +28,13 @@ How to Run the Program:
 
 Example Output:
 
-Enter student name: Alice
-
-Enter Subject, Task, and Time planned to Study: Biology, Quiz, 1 hour
+Enter Grade level, Subject, Task: Grade 8, Biology, Quiz
 
 Start Focus Timer
 
 After study sesh... 
 
-Progress: You studied your biology quiz for 1 hour! Good Job!
+Progress: Grade8_BIOLOGY_Quiz: Completed
 
 Contributors:
 
