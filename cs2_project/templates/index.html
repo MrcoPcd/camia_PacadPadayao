@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Screentime to Studytime</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #f4f6f8;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            margin: 30px auto;
+            width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        input {
+            padding: 10px;
+            width: 70%;
+        }
+
+        #timer {
+            font-size: 60px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Screentime to Studytime</h1>
+
+<div class="box">
+    <h2>Pomodoro Timer</h2>
+    <h3 id="mode">Mode: Focus</h3>
+    <div id="timer">25:00</div>
+
+    <button onclick="startTimer()">Start</button>
+    <button id="pauseBtn" onclick="togglePause()">Pause</button>
+    <button onclick="resetTimer()">Reset</button>
+</div>
+
+<div class="box">
+    <h2>To-Do List</h2>
+
+    <form action="/add_task" method="POST">
+        
+
+        <!-- GRADE -->
+        <select name="grade" id="grade" onchange="updateSubjects()" style="padding:10px; margin:5px;">
+            <option value="">Select Grade</option>
+            <option value="7">Grade 7</option>
+            <option value="8">Grade 8</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
+        </select>
+
+        <!-- SUBJECT -->
+        <select name="subject" id="subject" style="padding:10px; margin:5px;">
+            <option value="">Select Subject</option>
+        </select>
+
+        <!-- CATEGORY (TASK TYPE) -->
+        <select name="category" style="padding:10px; margin:5px;">
+            <option value="Homework">Homework</option>
+            <option value="Quiz">Quiz</option>
+            <option value="Test">Test</option>
+            <option value="Project">Project</option>
+            <option value="Performance Task">Performance Task</option>
+        </select>
+
+        <button type="submit">Add</button>
+    </form>
+    <br>
+    <a href="/tasks"><button>View Tasks</button></a>
+</div>
+
+<div class="box">
+    <h2>📊 Progress Tracker</h2>
+    <a href="/progress"><button>View Progress</button></a>
+</div>
+
+<script>
+function startTimer() {
+    fetch('/start_timer');
+}
+
+function updateTimer() {
+    fetch('/timer')
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("timer").innerText = data.time;
+        document.getElementById("mode").innerText = "Mode: " + data.mode;
+    });
+}
+
+setInterval(updateTimer, 1000);
+
+let isPaused = false;
+
+function togglePause() {
+    if (!isPaused) {
+        fetch('/pause_timer');
+        document.getElementById("pauseBtn").innerText = "Resume";
+        isPaused = true;
+    } else {
+        fetch('/resume_timer');
+        document.getElementById("pauseBtn").innerText = "Pause";
+        isPaused = false;
+    }
+}
+
+function resetTimer() {
+    fetch('/reset_timer');
+    document.getElementById("timer").innerText = "25:00";
+    document.getElementById("mode").innerText = "Mode: Focus";
+
+    document.getElementById("pauseBtn").innerText = "Pause";
+    isPaused = false;
+}
+
+
+
+const subjectsByGrade = {
+    "7": [
+        "Integrated Science","Computer Science","Mathematics","ADTech",
+        "Filipino","English","PEHM","Social Science","Values Education"
+    ],
+    "8": [
+        "Biology","Chemistry","Physics","Earth Science","ADTech",
+        "Mathematics 2","Mathematics 3","Computer Science",
+        "Social Science","Values Education","English","Filipino","PEHM"
+    ],
+    "9": [
+        "Mathematics","Statistics","PEHM","Values Education","Social Science",
+        "Computer Science","English","Filipino","Biology","Chemistry","Physics","ADTech"
+    ],
+    "10": [
+        "Mathematics","Statistics","PEHM","Values Education","Social Science",
+        "Computer Science","English","Filipino","Biology","Chemistry","Physics","Elective"
+    ],
+    "11": [
+        "Biology","Chemistry","Physics","Mathematics","Research",
+        "English","Filipino","Elective 1","Elective 2","Social Science"
+    ],
+    "12": [
+        "STEM Course 1","STEM Course 2","STEM Course 3","Mathematics",
+        "English","Filipino","Research","Elective","Social Science"
+    ]
+};
+
+function updateSubjects() {
+    const grade = document.getElementById("grade").value;
+    const subjectDropdown = document.getElementById("subject");
+
+    subjectDropdown.innerHTML = "<option value=''>Select Subject</option>";
+
+    if (subjectsByGrade[grade]) {
+        subjectsByGrade[grade].forEach(sub => {
+            let option = document.createElement("option");
+            option.value = sub;
+            option.text = sub;
+            subjectDropdown.appendChild(option);
+        });
+    }
+}
+</script>
+
+
+</script>
+
+</body>
+</html>
