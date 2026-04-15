@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Screentime to Studytime</title>
+    <title>Screentime to Studytime :3</title>
 
     <style>
         body {
@@ -34,26 +34,12 @@
             width: 70%;
         }
 
-        #timer {
-            font-size: 60px;
-            margin: 10px 0;
-        }
     </style>
 </head>
 
 <body>
 
 <h1>Screentime to Studytime</h1>
-
-<div class="box">
-    <h2>Pomodoro Timer</h2>
-    <h3 id="mode">Mode: Focus</h3>
-    <div id="timer">25:00</div>
-
-    <button onclick="startTimer()">Start</button>
-    <button id="pauseBtn" onclick="togglePause()">Pause</button>
-    <button onclick="resetTimer()">Reset</button>
-</div>
 
 <div class="box">
     <h2>To-Do List</h2>
@@ -86,9 +72,19 @@
             <option value="Performance Task">Performance Task</option>
         </select>
 
-        <button type="submit">Add</button>
+        <!-- TIMER OPTION -->
+        <select name="timer" style="padding:10px; margin:5px;">
+            <option value="None">Select Timer</option>
+            <option value=5>5 Minutes</option>
+            <option value=10>10 Minutes</option>
+            <option value=30>30 Minutes</option>
+            <option value=60>1 hour</option>
+        </select>
+
+        <br>
+
+    <button type="submit">Add</button>
     </form>
-    <br>
     <a href="/tasks"><button>View Tasks</button></a>
 </div>
 
@@ -97,45 +93,7 @@
     <a href="/progress"><button>View Progress</button></a>
 </div>
 
-<script>
-function startTimer() {
-    fetch('/start_timer');
-}
-
-function updateTimer() {
-    fetch('/timer')
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById("timer").innerText = data.time;
-        document.getElementById("mode").innerText = "Mode: " + data.mode;
-    });
-}
-
-setInterval(updateTimer, 1000);
-
-let isPaused = false;
-
-function togglePause() {
-    if (!isPaused) {
-        fetch('/pause_timer');
-        document.getElementById("pauseBtn").innerText = "Resume";
-        isPaused = true;
-    } else {
-        fetch('/resume_timer');
-        document.getElementById("pauseBtn").innerText = "Pause";
-        isPaused = false;
-    }
-}
-
-function resetTimer() {
-    fetch('/reset_timer');
-    document.getElementById("timer").innerText = "25:00";
-    document.getElementById("mode").innerText = "Mode: Focus";
-
-    document.getElementById("pauseBtn").innerText = "Pause";
-    isPaused = false;
-}
-
+<script> 
 
 
 const subjectsByGrade = {
@@ -181,6 +139,8 @@ function updateSubjects() {
         });
     }
 }
+
+
 </script>
 
 
