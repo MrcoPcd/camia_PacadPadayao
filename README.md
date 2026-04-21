@@ -1,4 +1,4 @@
-# camia_PacadPadayao
+# camia_PacadPadayaoVestra
 Computer Science 2 Project
 Project Title: Screentime to Studytime
 
@@ -7,7 +7,7 @@ The project “Screentime to Studytime” focuses on helping students reduce dis
 
 Features: 
 
-Focus Timer – a built-in timer to manage study and break sessions (Pomodoro style).
+Focus Timer – a built-in timer to manage study and break sessions.
 
 Progress Tracker – monitors study hours and completed tasks.
 
@@ -41,3 +41,5 @@ Contributors:
 Student 1: Marthena Abrielle A. Padayao
 
 Student 2: Marco Ethan Y. Pacad
+
+student 3: Rania Vestra
