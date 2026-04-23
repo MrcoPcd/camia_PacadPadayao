@@ -13,7 +13,8 @@ Progress Tracker – monitors study hours and completed tasks.
 
 Custom Study Plan – lets users set goals and organize subjects or topics efficiently.
 
-How to Run the Program: 
+How to Run the Program:
+
 1.Open the Program – launch the application on your device.
 
 2.Set Your Study Plan – input the subject or task you want to focus on and the time you’ll spend.
