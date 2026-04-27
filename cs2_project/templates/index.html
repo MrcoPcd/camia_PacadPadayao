@@ -89,7 +89,34 @@
 
     <button type="submit">Add</button>
     </form>
-    <a href="/tasks"><button>View Tasks</button></a>
+</div>
+
+<div class="box">
+    <h2>📋 Your Tasks</h2>
+    <div id="tasks-container">
+        {% if not tasks %}
+            <p>No tasks yet :3</p>
+        {% else %}
+            {% for task in tasks %}
+            <div style="margin:10px; padding:15px; border-bottom:1px solid #ddd; background: #fff; border-radius: 8px;">
+                <b>(Grade {{ task.grade }})</b> [{{ task.subject }}] [{{task.category}}]
+                <br>
+                <span style="font-size: 1.2em; font-weight: bold;" id="timer-{{ loop.index0 }}">Loading...</span>
+                
+                <div style="margin-top: 10px;">
+                    <a href="/timer/{{ loop.index0 }}/start"><button style="background: #4CAF50;">▶ Start</button></a>
+                    <a href="/timer/{{ loop.index0 }}/pause"><button style="background: #ff9800;">⏸ Pause</button></a>
+                    <a href="/timer/{{ loop.index0 }}/stop"><button style="background: #f44336;">⏹ Stop</button></a>
+                </div>
+                
+                <div style="margin-top: 5px;">
+                    <a href='/complete/{{ loop.index0 }}' style="font-size: 0.8em;">[Complete]</a>
+                    <a href='/delete/{{ loop.index0 }}' style="font-size: 0.8em; color: red;">[Delete]</a>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 </div>
 
 <div class="box">
@@ -144,9 +171,25 @@ function updateSubjects() {
     }
 }
 
+function updateTimers() {
+    fetch("/get_task_timers")
+    .then(res => {
+        if (!res.ok) throw new Error("Backend error");
+        return res.json();
+    })
+    .then(data => {
+        data.forEach((timeString, index) => {
+            const el = document.getElementById("timer-" + index);
+            if (el) {
+                el.innerText = timeString;
+            }
+        });
+    })
+    .catch(err => console.log("Waiting for server..."));
+}
 
-</script>
-
+setInterval(updateTimers, 1000);
+updateTimers();
 
 </script>
 
