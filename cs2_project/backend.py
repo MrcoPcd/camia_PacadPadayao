@@ -18,49 +18,37 @@ timer_mode = "focus"
 timer_paused = False
 timer_mode= "focus"
 
-FOCUS_TIME = request.form.get("timer") * 60
-
 # -----------------
 # HOME PAGE
 # -----------------
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return render_template("index.html", tasks=tasks)
 
 # -----------------
 # ADD TASK
 # -----------------
 @app.route("/add_task", methods=["POST"])
 def add_task():
-    task = "Task"
     grade = request.form.get("grade", "Not Set")
     subject = request.form.get("subject", "General")
     category = request.form.get("category", "General")
+    timer_value = request.form.get("timer")
+
+    duration = int(timer_value) * 60 if timer_value and timer_value != "None" else 0
 
     tasks.append({
-    "task": task,
-    "grade": grade,
-    "subject": subject,
-    "category": category,
-    "done": False
-})
+        "task": "Task",
+        "grade": grade,
+        "subject": subject,
+        "category": category,
+        "done": False,
+        "remaining_time": duration,
+        "running": False,           
+        "last_updated": None        
+    })
     return redirect("/")
 
-# -----------------
-# VIEW TASKS
-# -----------------
-@app.route("/tasks")
-def view_tasks():
-    output = "<h2>Tasks</h2>"
-
-    if tasks == []:
-         output += "◎ None so far :D<br>"
-    else:
-        for i, task in enumerate(tasks):
-            output += f"◎ (Grade {task['grade']}) [{task['subject']}] ({task['category']}) {task['task']} - Not Done <a href='/complete/{i}'>[Complete]</a> <a href='/delete/{i}'>[Delete]</a><br>"
-
-    output += "<br><a href='/'>Back to Home</a>"
-    return output
 
 # -----------------
 # COMPLETE TASK
@@ -71,7 +59,7 @@ def complete_task(task_id):
         tasks[task_id]["done"] = True
         completed_tasks.append(tasks[task_id])
         tasks.remove(tasks[task_id])
-        return redirect("/tasks")
+        return redirect("/")
     return "Task not found"
 
 # -----------------
@@ -80,7 +68,7 @@ def complete_task(task_id):
 @app.route("/delete/<int:task_id>")
 def delete_task(task_id):
     tasks.remove(tasks[task_id])
-    return redirect("/tasks")
+    return redirect("/")
 
 # -----------------
 # UNDO COMPLETION OF TASK
@@ -125,91 +113,66 @@ def progress():
     """
 
 # -----------------
-# START TIMER
+# TIMER
 # -----------------
-@app.route("/start_timer")
-def start_timer():
-    global timer_end_time, timer_mode, timer_paused
+@app.route("/timer/<int:task_id>/<action>")
+def control_timer(task_id, action):
+    if 0 <= task_id < len(tasks):
+        task = tasks[task_id]
+        if action == "start":
+            task["running"] = True
+            task["last_updated"] = time.time()
+        elif action == "pause":
+            # Update the remaining time one last time before stopping
+            get_remaining_seconds(task) 
+            task["running"] = False
+        elif action == "stop":
+            task["running"] = False
+            task["remaining_time"] = 0
+    return redirect("/")
 
-    timer_mode = "focus"
-    timer_paused = False
-    timer_end_time = time.time() + FOCUS_TIME
-
-    return "Timer started"
-
-# -----------------
-# PAUSE TIMER
-# -----------------
-@app.route("/pause_timer")
-def pause_timer():
-    global timer_end_time, timer_paused, pause_remaining
-
-    if timer_end_time:
-        pause_remaining = int(timer_end_time - time.time())
-        timer_paused = True
-
-    return "Paused"
-
-# -----------------
-# RESUME TIMER
-# -----------------
-@app.route("/resume_timer")
-def resume_timer():
-    global timer_end_time, timer_paused, pause_remaining
-
-    if timer_paused:
-        timer_end_time = time.time() + pause_remaining
-        timer_paused = False
-
-    return "Resumed"
-
-# -----------------
-# RESET TIMER
-# -----------------
-@app.route("/reset_timer")
-def reset_timer():
-    global timer_end_time, timer_mode, timer_paused
-
-    timer_mode = "focus"
-    timer_paused = False
-    timer_end_time = None
-
-    return "Reset"
+def get_remaining_seconds(task):
+    if task.get("running") and task["remaining_time"] > 0:
+        now = time.time()
+        elapsed = now - task["last_updated"]
+        
+        task["remaining_time"] = max(0, task["remaining_time"] - elapsed)
+        
+        task["last_updated"] = now
+        
+    return int(task["remaining_time"])
 
 
 # -----------------
 # TIMER API (JSON)
 # -----------------
-@app.route("/timer")
-def timer_status():
-    global timer_end_time, timer_mode
+def calculate_remaining(task):
+    """Calculates seconds left and updates the last_updated anchor."""
+    if task.get("running") and task["remaining_time"] > 0:
+        now = time.time()
+        # If it was just started, initialize the anchor
+        if task["last_updated"] is None:
+            task["last_updated"] = now
+            
+        elapsed = now - task["last_updated"]
+        task["remaining_time"] = max(0, task["remaining_time"] - elapsed)
+        task["last_updated"] = now
+        
+    return int(task["remaining_time"])
 
-    if timer_end_time is None:
-        return {"time": "00:00", "mode": "Not started"}
-
-    if timer_paused:
-        remaining = pause_remaining
-    else:
-        remaining = int(timer_end_time - time.time())
-
-    # AUTO SWITCH
-    if remaining <= 0:
-        if timer_mode == "focus":
-            timer_mode = "break"
-            timer_end_time = time.time() + BREAK_TIME
-        else:
-            timer_mode = "focus"
-            timer_end_time = time.time() + FOCUS_TIME
-
-        remaining = int(timer_end_time - time.time())
-
-    minutes = remaining // 60
-    seconds = remaining % 60
-
-    return {
-        "time": f"{minutes:02d}:{seconds:02d}",
-        "mode": timer_mode
-    }
+@app.route("/get_task_timers")
+def get_timers_api():
+    """This is the ONLY function that should be named for the API route."""
+    results = []
+    for task in tasks:
+        rem = calculate_remaining(task)
+        minutes = rem // 60
+        seconds = rem % 60
+        results.append(f"{minutes:02d}:{seconds:02d}")
+    
+    # Flask needs us to return this as a JSON list for the JavaScript to read it
+    from flask import jsonify
+    return jsonify(results)
 
 # -----------------
 # RUN SERVER
